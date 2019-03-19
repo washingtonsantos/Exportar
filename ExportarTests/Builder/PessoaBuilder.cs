@@ -1,12 +1,10 @@
 ﻿using Bogus;
 using ExportarTests.Entitie;
-using System.Collections.Generic;
 
 namespace ExportarTests.Builder
 {
     public class PessoaBuilder
     {       
-        Pessoa pessoa;
         private Faker _faker = new Faker();
         private int Id { get; set; }
         private string Nome { get; set; }

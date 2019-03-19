@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Exportar
 {
@@ -22,12 +20,6 @@ namespace Exportar
         /// <typeparam name="T"></typeparam>
         /// <param name="listaGenerica"></param>
         /// <param name="caminhoParaSalvarArquivo"></param>
-        /// <param name="filtroAtivadoNoCabecalho"></param>
-        /// <param name="backgroundCabecalho"></param>
-        /// <param name="foregroundCabecalho"></param>
-        /// <param name="nomeDaAbaDaPlanilha"></param>
-        /// <param name="formatarColunadoubleParaMonetario"></param>
-        /// <param name="formatarColunaDateTimeRemovendoTime"></param>
         public byte[] GerarArquivo<T>(List<T> listaGenerica, string caminhoParaSalvarArquivo = @"C:\")
             where T : class
         {
@@ -73,7 +65,21 @@ namespace Exportar
             return array;
         }
 
-        public byte[] GerarArquivo<T>(List<T> listaGenerica, string caminhoParaSalvarArquivo = @"C:\", string nomeDaAbaDaPlanilha = "Nome do Objeto", bool filtroAtivadoNoCabecalho = true, string backgroundCabecalho = "Red", string foregroundCabecalho = "White", bool formatarColunadoubleParaMonetario = true, bool formatarColunaDateTimeRemovendoTime = true)
+        /// <summary>
+        /// Gerar Arquivo Excel a partir de uma lista Generica
+        /// Parâmetro "salvarPlanilha" é usado para adicionar mais de uma aba na planilha
+        /// Ex: Exportar.Exportar.XLSX(Objeto1, @"C:\Temp\relatorio.xlsx",false);
+        ///     Exportar.Exportar.XLSX(Objeto2, @"C:\Temp\relatorio.xlsx",true);
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="listaGenerica"></param>
+        /// <param name="caminhoParaSalvarArquivo"></param>
+        /// <param name="nomeDaAbaDaPlanilha"></param>
+        /// <param name="backgroundCabecalho"></param>
+        /// <param name="foregroundCabecalho"></param>
+        /// <param name="formatarColunadoubleParaMonetario"></param>
+        /// <param name="formatarColunaDateTimeRemovendoTime"></param>
+        public byte[] GerarArquivo<T>(List<T> listaGenerica, string caminhoParaSalvarArquivo = @"C:\", string nomeDaAbaDaPlanilha = "Nome do Objeto", string backgroundCabecalho = "Red", string foregroundCabecalho = "White")
           where T : class
         {
             byte[] array = null;
@@ -98,11 +104,9 @@ namespace Exportar
                     var ultimaColuna = worksheet.Dimension.End.Column;
 
                     //Metodos de Formatação da Planilha
-                    FormataCabecalho(worksheet, backgroundCabecalho, foregroundCabecalho, filtroAtivadoNoCabecalho, ultimaLinha, ultimaColuna);
+                    FormataCabecalho(worksheet, backgroundCabecalho, foregroundCabecalho, ultimaLinha, ultimaColuna);
                     FormataBordas(worksheet, ultimaLinha, ultimaColuna);
 
-                    //Formatar Celulas
-                    FormataCelulas(listaGenerica, worksheet, formatarColunadoubleParaMonetario, formatarColunaDateTimeRemovendoTime, ultimaLinha, ultimaColuna);
                     worksheet.Cells.AutoFitColumns();
 
                     if (caminhoParaSalvarArquivo.Length > 5)
@@ -118,39 +122,14 @@ namespace Exportar
 
             return array;
         }
-        private void FormataCelulas<T>(List<T> listaGenericaT, ExcelWorksheet worksheet, bool formatarColunadoubleParaMonetario, bool formatarColunaDateTimeRemovendoTime, int ultimaLinha, int ultimaColuna)
-            where T : class
-        {
-            var propriedades = typeof(T);
-            int col = 1;
-            int colunaAtual = 0;
-
-            foreach (var item in propriedades.GetProperties())
-            {
-                var propriedade = item.PropertyType.Name;
-
-                if (propriedade == "Double" && formatarColunadoubleParaMonetario == true)
-                {
-                    worksheet.Cells[2, col, ultimaLinha, col].Style.Numberformat.Format = "_-R$* #,##0.00_-;-R$* #,##0.00_-;_-R$* \"-\"??_-;_-@_-";
-                }
-                else if (propriedade == "DateTime" && formatarColunaDateTimeRemovendoTime == true)
-                {
-                    worksheet.Cells[2, colunaAtual, ultimaLinha, col].Style.Numberformat.Format = "dd/mm/yyyy";
-                }
-
-                colunaAtual += 1;
-                col += 1;
-            }
-        }
-       
-        private void FormataCabecalho(ExcelWorksheet worksheet, string backgroundCabecalho, string foregroundCabecalho, bool filtroAtivadoNoCabecalho, int ultimaLinha, int ultimaColuna)
+        private void FormataCabecalho(ExcelWorksheet worksheet, string backgroundCabecalho, string foregroundCabecalho, int ultimaLinha, int ultimaColuna)
         {
             //Estilho Cabeçalho
             worksheet.Cells[1, 1, 1, ultimaColuna].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
             worksheet.Cells[1, 1, 1, ultimaColuna].Style.Fill.BackgroundColor.SetColor(color: System.Drawing.Color.FromName(backgroundCabecalho));
             worksheet.Cells[1, 1, 1, ultimaColuna].Style.Font.Color.SetColor(color: System.Drawing.Color.FromName(foregroundCabecalho));
             worksheet.Cells[1, 1, 1, ultimaColuna].Style.Font.Bold = true;
-            worksheet.Cells[1, 1, 1, ultimaColuna].AutoFilter = filtroAtivadoNoCabecalho;
+            worksheet.Cells[1, 1, 1, ultimaColuna].AutoFilter = true;
             worksheet.View.FreezePanes(2, 1);
         }
         private void FormataCabecalho(ExcelWorksheet worksheet, int ultimaLinha, int ultimaColuna)
@@ -163,7 +142,6 @@ namespace Exportar
             worksheet.Cells[1, 1, 1, ultimaColuna].AutoFilter = true;
             worksheet.View.FreezePanes(2, 1);
         }
-
         private void FormataBordas(ExcelWorksheet worksheet, int ultimaLinha, int ultimaColuna)
         {
             //Estilho de Bordas do Documento.
