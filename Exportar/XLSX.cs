@@ -39,7 +39,8 @@ namespace Exportar
                 using (var pck = new ExcelPackage(fi))
                 {
                     //Reflection da Lista de <T>
-                    var mi = typeof(T).GetProperties().Where(pi => pi.Name != "Col7")
+                    var mi = typeof(T).GetProperties()
+                        //.Where(pi => pi.Name != "Col7")
                      .Select(pi => (MemberInfo)pi).ToArray();
 
                     var aba = DateTime.Now.ToString().Trim();

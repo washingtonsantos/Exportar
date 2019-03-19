@@ -1,48 +1,46 @@
 ﻿using Bogus;
+using ExportarTests.Entitie;
 using System.Collections.Generic;
 
 namespace ExportarTests.Builder
 {
     public class PessoaBuilder
-    {
-        private int Id { get;set; }
+    {       
+        Pessoa pessoa;
+        private Faker _faker = new Faker();
+        private int Id { get; set; }
         private string Nome { get; set; }
 
+        public PessoaBuilder()
+        {
+            Id = _faker.Random.Int(0, 1000000);
+            Nome = _faker.Person.FirstName;
+        }
+
         public static PessoaBuilder Novo()
-        {            
+        {
             return new PessoaBuilder();
         }
 
-        public PessoaBuilder Build()
+        public Pessoa Build()
         {
-            PessoaBuilder pessoa = new PessoaBuilder();
-            var _faker = new Faker();
-            pessoa.Id = _faker.Random.Int();
-            pessoa.Nome = _faker.Person.FirstName;
+            Pessoa pessoa = new Pessoa();
+            pessoa.Id = Id;
+            pessoa.Nome = Nome;
             return pessoa;
         }
              
         public PessoaBuilder ComNome(string nome)
         {
-            PessoaBuilder pessoa = new PessoaBuilder();
-            pessoa.Nome = nome;
-            return pessoa;
+            Nome = nome;
+            return this;
         }
 
-        public int ComId(int id)
+        public PessoaBuilder ComId(int id)
         {
-            PessoaBuilder pessoa = new PessoaBuilder();
-            pessoa.Id = id;
-            return pessoa.Id;
-        }
-
-        public static List<PessoaBuilder> Pessoas(PessoaBuilder pessoa)
-        {
-            List<PessoaBuilder> pessoas = new List<PessoaBuilder>();
-            pessoas.Add(pessoa);
-             
-            return pessoas;
-        }
+            Id = id;
+            return this;
+        }       
 
     }
 }

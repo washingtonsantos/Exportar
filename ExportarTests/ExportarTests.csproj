@@ -55,6 +55,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Builder\Factory.cs" />
     <Compile Include="Builder\PessoaBuilder.cs" />
     <Compile Include="Entitie\Pessoa.cs" />
     <Compile Include="ExportarTests.cs" />
