@@ -28,8 +28,52 @@ namespace Exportar
         /// <param name="nomeDaAbaDaPlanilha"></param>
         /// <param name="formatarColunadoubleParaMonetario"></param>
         /// <param name="formatarColunaDateTimeRemovendoTime"></param>
-        public byte[] GerarArquivo<T>(List<T> listaGenerica, string caminhoParaSalvarArquivo = @"C:\", string nomeDaAbaDaPlanilha = "Nome do Objeto", bool filtroAtivadoNoCabecalho = true, string backgroundCabecalho = "Red", string foregroundCabecalho = "White", bool formatarColunadoubleParaMonetario = true, bool formatarColunaDateTimeRemovendoTime = true)
+        public byte[] GerarArquivo<T>(List<T> listaGenerica, string caminhoParaSalvarArquivo = @"C:\")
             where T : class
+        {
+            byte[] array = null;
+            var fi = new FileInfo(caminhoParaSalvarArquivo);
+
+            if (listaGenerica != null && listaGenerica.Count > 0)
+            {
+                using (var pck = new ExcelPackage(fi))
+                {
+                    //Reflection da Lista de <T>
+                    var mi = typeof(T).GetProperties().Where(pi => pi.Name != "Col7")
+                     .Select(pi => (MemberInfo)pi).ToArray();
+
+                    var aba = DateTime.Now.ToString().Trim();
+                    var existeAba = pck.Workbook.Worksheets.Where(w => w.Name == aba).FirstOrDefault()?.ToString() ?? "";
+                    var novaAba = existeAba.Length > 0 ? existeAba + "1" : aba;
+                    var worksheet = pck.Workbook.Worksheets.Add(novaAba);
+
+                    //Processamento da Planilha
+                    worksheet.Cells.LoadFromCollection(listaGenerica, true, TableStyles.None, BindingFlags.Public | BindingFlags.Instance, mi);
+                    var ultimaLinha = worksheet.Dimension.End.Row;
+                    var ultimaColuna = worksheet.Dimension.End.Column;
+
+                    //Metodos de Formatação da Planilha
+                    FormataCabecalho(worksheet, ultimaLinha, ultimaColuna);
+                    FormataBordas(worksheet, ultimaLinha, ultimaColuna);
+
+                    worksheet.Cells.AutoFitColumns();
+
+                    if (caminhoParaSalvarArquivo.Length > 5)
+                    {
+                        pck.Save();
+                    }
+
+                    array = pck.GetAsByteArray();
+
+                    //return array;
+                }
+            }
+
+            return array;
+        }
+
+        public byte[] GerarArquivo<T>(List<T> listaGenerica, string caminhoParaSalvarArquivo = @"C:\", string nomeDaAbaDaPlanilha = "Nome do Objeto", bool filtroAtivadoNoCabecalho = true, string backgroundCabecalho = "Red", string foregroundCabecalho = "White", bool formatarColunadoubleParaMonetario = true, bool formatarColunaDateTimeRemovendoTime = true)
+          where T : class
         {
             byte[] array = null;
             var fi = new FileInfo(caminhoParaSalvarArquivo);
@@ -97,6 +141,7 @@ namespace Exportar
                 col += 1;
             }
         }
+       
         private void FormataCabecalho(ExcelWorksheet worksheet, string backgroundCabecalho, string foregroundCabecalho, bool filtroAtivadoNoCabecalho, int ultimaLinha, int ultimaColuna)
         {
             //Estilho Cabeçalho
@@ -107,6 +152,17 @@ namespace Exportar
             worksheet.Cells[1, 1, 1, ultimaColuna].AutoFilter = filtroAtivadoNoCabecalho;
             worksheet.View.FreezePanes(2, 1);
         }
+        private void FormataCabecalho(ExcelWorksheet worksheet, int ultimaLinha, int ultimaColuna)
+        {
+            //Estilho Cabeçalho
+            worksheet.Cells[1, 1, 1, ultimaColuna].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+            worksheet.Cells[1, 1, 1, ultimaColuna].Style.Fill.BackgroundColor.SetColor(color: System.Drawing.Color.FromName("Red"));
+            worksheet.Cells[1, 1, 1, ultimaColuna].Style.Font.Color.SetColor(color: System.Drawing.Color.FromName("White"));
+            worksheet.Cells[1, 1, 1, ultimaColuna].Style.Font.Bold = true;
+            worksheet.Cells[1, 1, 1, ultimaColuna].AutoFilter = true;
+            worksheet.View.FreezePanes(2, 1);
+        }
+
         private void FormataBordas(ExcelWorksheet worksheet, int ultimaLinha, int ultimaColuna)
         {
             //Estilho de Bordas do Documento.
