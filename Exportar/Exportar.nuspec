@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Exportar</id>
+    <version>1.0.4</version>
+    <title>Gera Excel</title>
+    <authors>Washington Silva Santos</authors>
+    <owners>Washington Silva Santos</owners>
+    <licenseUrl>https://www.gnu.org/licenses/lgpl-3.0.en.html</licenseUrl>
+    <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
+    <iconUrl>https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Microsoft_Excel_2013_logo.svg/1200px-Microsoft_Excel_2013_logo.svg.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Biblioteca que gera excel a partir de uma lista generica</description>
+    <releaseNotes>Correção quando é gerado coluna no formato de data.</releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>Gerar Excel arquivo Excel planilha</tags>
+	<dependencies>
+	    <dependency id="EPPlus" version="4.5.1.0" />
+	</dependencies>
+  </metadata>
+  <files>
+      <file src="bin\Release\Exportar.dll" target="lib\Exportar.dll" />
+  </files>
+</package>
