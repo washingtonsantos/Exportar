@@ -55,8 +55,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Builder\Pessoa.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="Builder\PessoaBuilder.cs" />
+    <Compile Include="Entitie\Pessoa.cs" />
+    <Compile Include="ExportarTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

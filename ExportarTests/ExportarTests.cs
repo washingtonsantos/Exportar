@@ -4,14 +4,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ExportarTests
 {
     [TestClass]
-    public class UnitTest1
+    public class ExportarTests
     {
         [TestMethod]
-        public void TestMethod1()
+        public void ExportarPessoa()
         {
-            var pessoa = Builder.Pessoa.PessoaBuilder();
+            var pessoa = Builder.PessoaBuilder.Novo().Build();
            
-            var listaPessoas = Builder.Pessoa.Pessoas(pessoa);
+            var listaPessoas = Builder.PessoaBuilder.Pessoas(pessoa);
 
             Exportar.XLSX exp = new Exportar.XLSX();
             exp.GerarArquivo(listaPessoas, @"C:\washington_teste.xlsx");
