@@ -55,9 +55,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Builder\Factory.cs" />
-    <Compile Include="Builder\PessoaBuilder.cs" />
-    <Compile Include="Entitie\Pessoa.cs" />
+    <Compile Include="Builders\CarroBuilder.cs" />
+    <Compile Include="Builders\Factory.cs" />
+    <Compile Include="Builders\PessoaBuilder.cs" />
+    <Compile Include="Entities\Carro.cs" />
+    <Compile Include="Entities\Pessoa.cs" />
     <Compile Include="ExportarTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

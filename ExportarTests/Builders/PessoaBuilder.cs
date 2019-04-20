@@ -1,18 +1,22 @@
 ﻿using Bogus;
-using ExportarTests.Entitie;
+using ExportarTests.Entities;
 
 namespace ExportarTests.Builder
 {
     public class PessoaBuilder
     {       
         private Faker _faker = new Faker();
-        private int Id { get; set; }
-        private string Nome { get; set; }
+        private int Id;
+        private string Nome;
+        private int Idade;
+        private string Sexo;
 
         public PessoaBuilder()
         {
             Id = _faker.Random.Int(0, 1000000);
             Nome = _faker.Person.FirstName;
+            Idade = _faker.Random.Int(0,90);
+            Sexo = _faker.Person.Gender.ToString();
         }
 
         public static PessoaBuilder Novo()
@@ -25,6 +29,8 @@ namespace ExportarTests.Builder
             Pessoa pessoa = new Pessoa();
             pessoa.Id = Id;
             pessoa.Nome = Nome;
+            pessoa.Idade = Idade;
+            pessoa.Sexo = Sexo;
             return pessoa;
         }
              
