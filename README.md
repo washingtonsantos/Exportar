@@ -1,3 +1,6 @@
+# **Nugget**
+https://www.nuget.org/packages/Biblioteca.GeraExcel/
+
 # **Exportar**
 
 Exporte facilmente uma lista de objetos
@@ -10,3 +13,4 @@ Esta biblioteca tem o objetivo de facilitar a exportação de listas ('objeto'),
 ***
 # **Exemplo De Uso**
 [Uso Básico](https://github.com/washingtonsantos/Exportar/wiki/Uso-B%C3%A1sico)
+
